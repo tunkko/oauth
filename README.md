@@ -23,7 +23,7 @@
 #### 2.1.2 配置
 ```text
 oauth:
-  # 令牌存储方式
+  # 令牌存储方式(redis|java)
   store-type: redis
   # 拦截路径
   paths: /**
