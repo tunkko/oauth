@@ -65,7 +65,8 @@ public class OauthConfiguration implements WebMvcConfigurer {
         String[] paths = properties.getPaths();
         String[] includePaths = properties.getIncludePaths();
         String[] excludePaths = properties.getExcludePaths();
-        registry.addInterceptor(new OauthInterceptor(tokenStore(), includePaths, excludePaths))
-                .addPathPatterns(paths);
+        registry.addInterceptor(new OauthInterceptor(tokenStore(), includePaths))
+                .addPathPatterns(paths)
+                .excludePathPatterns(excludePaths);
     }
 }

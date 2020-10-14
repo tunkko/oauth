@@ -1,9 +1,16 @@
 package org.tunkko.oauth.subject;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -55,15 +62,20 @@ public class Subject implements Serializable {
      */
     private Date startTime;
 
-    public Subject(Object userId, Map<String, Object> claims, String reqIp, String reqUri, String reqMethod, String reqParams, String userAgent) {
+    public Subject(Object userId, Map<String, Object> claims) {
         this.userId = userId;
         this.claims = claims;
-        this.reqIp = reqIp;
-        this.reqUri = reqUri;
-        this.reqMethod = reqMethod;
-        this.reqParams = reqParams;
-        this.userAgent = userAgent;
         this.startTime = new Date();
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            this.reqIp = getIp(request);
+            this.reqUri = request.getRequestURI();
+            this.reqMethod = request.getMethod();
+            this.reqParams = getParams(request);
+            this.userAgent = request.getHeader("User-Agent");
+        }
     }
 
     public Object getUserId() {
@@ -132,5 +144,41 @@ public class Subject implements Serializable {
 
     public String toJson() {
         return JSON.toJSONString(this);
+    }
+
+    private String getParams(HttpServletRequest request) {
+        Map<String, String[]> params = new HashMap<>(request.getParameterMap());
+        params.remove("token");
+        return JSON.toJSONString(params);
+    }
+
+    private String getIp(HttpServletRequest request) {
+        String ip = request.getHeader("Cdn-Src-Ip");
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("X-Forwarded-For");
+        }
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+            if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
+                try {
+                    InetAddress inet = InetAddress.getLocalHost();
+                    ip = inet.getHostAddress();
+                } catch (UnknownHostException ignored) {
+                }
+            }
+        }
+        return ip;
     }
 }

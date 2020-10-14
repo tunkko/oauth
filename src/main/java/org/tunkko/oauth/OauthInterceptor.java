@@ -39,19 +39,16 @@ public class OauthInterceptor implements HandlerInterceptor {
 
     private String[] includePaths;
 
-    private String[] excludePaths;
-
-    public OauthInterceptor(TokenStore tokenStore, String[] includePaths, String[] excludePaths) {
+    public OauthInterceptor(TokenStore tokenStore, String[] includePaths) {
         this.tokenStore = tokenStore;
         this.includePaths = includePaths;
-        this.excludePaths = excludePaths;
     }
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Logger.info("------------------------------------------------------------------------");
-        Boolean flag = checkPath(request.getRequestURI());
-        checkTokenAndPermit(request, handler, flag);
+        checkPath(request.getRequestURI());
+        checkTokenAndPermit(request, handler);
         Logger.info("------------------------------------------------------------------------");
         return true;
     }
@@ -61,65 +58,41 @@ public class OauthInterceptor implements HandlerInterceptor {
         SubjectUtils.remove();
     }
 
-    private Boolean checkPath(String uri) throws ForbiddenException {
-        Logger.info("检查放行路径: %s - %s", Arrays.toString(excludePaths), uri);
-        if (ArrayUtils.isNotEmpty(excludePaths)) {
-            for (String path : excludePaths) {
-                String pattern = path.replaceAll("\\*", ".*") + "$";
-                if (Pattern.matches(pattern, uri)) {
-                    return true;
-                }
-            }
-        }
+    private void checkPath(String uri) throws ForbiddenException {
         Logger.info("检查访问路径: %s - %s", Arrays.toString(includePaths), uri);
         if (ArrayUtils.isNotEmpty(includePaths)) {
             for (String path : includePaths) {
                 String pattern = path.replaceAll("\\*", ".*") + "$";
                 if (Pattern.matches(pattern, uri)) {
-                    return false;
+                    return;
                 }
             }
         }
         throw new ForbiddenException("请求路径无效");
     }
 
-    private void checkTokenAndPermit(HttpServletRequest request, Object handler, Boolean flag) throws OauthException {
+    private void checkTokenAndPermit(HttpServletRequest request, Object handler) throws OauthException {
         String accessToken = request.getHeader("token");
         if (StringUtils.isBlank(accessToken)) {
             accessToken = request.getParameter("token");
         }
-
-        String ip = getIp(request);
-        String uri = request.getRequestURI();
-        String method = request.getMethod();
-        String params = getParams(request);
-        String userAgent = request.getHeader("User-Agent");
-
-        if (flag) {
-            Subject subject = new Subject(null, null, ip, uri, method, params, userAgent);
-            SubjectUtils.set(subject);
-            Logger.info("获取Subject: %s", subject.toJson());
-            return;
-        } else {
-            Logger.info("解析access_token: %s", accessToken);
-            Token token = tokenStore.findToken(accessToken);
-            if (token != null) {
-                Object userId = token.getUserId();
-                List<String> permits = tokenStore.getPermits(userId);
-
-                // 检查许可
-                checkPermit(handler, permits);
-
-                // 主体
-                Map<String, Object> claims = token.getClaims();
-
-                Subject subject = new Subject(userId, claims, ip, uri, method, params, userAgent);
-                SubjectUtils.set(subject);
-                Logger.info("获取Subject: %s", subject.toJson());
-                return;
-            }
+        Logger.info("解析access_token: %s", accessToken);
+        Token token = tokenStore.findToken(accessToken);
+        if (token == null) {
+            throw new OauthException("身份验证失败");
         }
-        throw new OauthException("身份验证失败");
+
+        Object userId = token.getUserId();
+        List<String> permits = tokenStore.getPermits(userId);
+
+        // 检查许可
+        checkPermit(handler, permits);
+
+        // 主体
+        Map<String, Object> claims = token.getClaims();
+        Subject subject = new Subject(userId, claims);
+        SubjectUtils.set(subject);
+        Logger.info("主体Subject: %s", subject.toJson());
     }
 
     private void checkPermit(Object handler, List<String> permits) throws ForbiddenException {
@@ -135,41 +108,5 @@ public class OauthInterceptor implements HandlerInterceptor {
             }
         }
         throw new ForbiddenException("无权访问");
-    }
-
-    private String getParams(HttpServletRequest request) {
-        Map<String, String[]> params = new HashMap<>(request.getParameterMap());
-        params.remove("token");
-        return JSON.toJSONString(params);
-    }
-
-    private String getIp(HttpServletRequest request) {
-        String ip = request.getHeader("Cdn-Src-Ip");
-        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("X-Real-IP");
-        }
-        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("X-Forwarded-For");
-        }
-        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("HTTP_CLIENT_IP");
-        }
-        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("Proxy-Client-IP");
-        }
-        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getHeader("WL-Proxy-Client-IP");
-        }
-        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip)) {
-            ip = request.getRemoteAddr();
-            if ("127.0.0.1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip)) {
-                try {
-                    InetAddress inet = InetAddress.getLocalHost();
-                    ip = inet.getHostAddress();
-                } catch (UnknownHostException ignored) {
-                }
-            }
-        }
-        return ip;
     }
 }
