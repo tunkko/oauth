@@ -114,7 +114,7 @@ public class RedisTokenStore implements TokenStore {
             Token token = JSON.parseObject(Crypto.decrypt(accessToken, getKey()), Token.class);
             if (token != null) {
                 Object userId = token.getUserId();
-                String key = OAUTH_TOKEN + userId + ":" + token.getCreateTime().getTime();
+                String key = parse(OAUTH_TOKEN, userId, token.getCreateTime().getTime());
                 if (StringUtils.equals(redisTemplate.opsForValue().get(key), accessToken)) {
                     token.setPermits(getPermits(userId));
                     return token;
