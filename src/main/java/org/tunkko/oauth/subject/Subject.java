@@ -1,6 +1,7 @@
 package org.tunkko.oauth.subject;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -64,7 +65,7 @@ public class Subject implements Serializable {
 
     public Subject(Object userId, Map<String, Object> claims) {
         this.userId = userId;
-        this.claims = claims;
+        this.claims = MapUtils.isEmpty(claims) ? new HashMap<String, Object>() : claims;
         this.startTime = new Date();
 
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

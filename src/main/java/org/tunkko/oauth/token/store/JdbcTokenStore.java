@@ -151,7 +151,8 @@ public class JdbcTokenStore implements TokenStore {
     public Token findToken(String accessToken) {
         if (StringUtils.isNotBlank(accessToken)) {
             Token token = JSON.parseObject(Crypto.decrypt(accessToken, getKey()), Token.class);
-            if (token != null && (token.getValidDuration() == 0 || token.getExpireTime().compareTo(new Date()) > 0)) {
+            boolean bool = token != null && (token.getExpireTime() == null || token.getExpireTime().compareTo(new Date()) > 0);
+            if (bool) {
                 try {
                     Object userId = token.getUserId();
                     String query = jdbcTemplate.queryForObject(Q_TOKEN, String.class, userId + ":" + token.getCreateTime().getTime());

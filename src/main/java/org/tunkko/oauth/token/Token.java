@@ -3,6 +3,7 @@ package org.tunkko.oauth.token;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -72,11 +73,11 @@ public class Token implements Serializable {
 
     public Token(Object userId, Map<String, Object> claims, Integer maxToken, Long validDuration, List<String> permits) {
         this.userId = userId;
-        this.claims = claims == null ? new HashMap<String, Object>() : claims;
+        this.claims = MapUtils.isEmpty(claims) ? new HashMap<String, Object>() : claims;
         this.maxToken = maxToken < 1 ? 1 : maxToken;
         this.createTime = new Date();
         this.validDuration = validDuration;
-        this.expireTime = new Date(System.currentTimeMillis() + validDuration);
+        this.expireTime = validDuration == 0 ? null : new Date(System.currentTimeMillis() + validDuration);
         this.permits = CollectionUtils.isEmpty(permits) ? new ArrayList<String>() : permits;
     }
 
