@@ -1,6 +1,5 @@
 package org.tunkko.oauth;
 
-import com.alibaba.fastjson.JSON;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,10 +17,7 @@ import org.tunkko.oauth.token.store.TokenStore;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -98,12 +94,17 @@ public class OauthInterceptor implements HandlerInterceptor {
     private void checkPermit(Object handler, List<String> permits) throws ForbiddenException {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
-            if (method.isAnnotationPresent(Permit.class)) {
-                String[] values = method.getAnnotation(Permit.class).value();
-                if (CollectionUtils.containsAny(Arrays.asList(values), permits)) {
+            Permit permit = method.getAnnotation(Permit.class);
+            if (permit == null) {
+                Class<?> clazz = method.getDeclaringClass();
+                permit = clazz.getAnnotation(Permit.class);
+                if (permit == null) {
                     return;
                 }
-            } else {
+            }
+
+            String[] values = permit.value();
+            if (CollectionUtils.containsAny(Arrays.asList(values), permits)) {
                 return;
             }
         }
