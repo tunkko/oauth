@@ -152,7 +152,11 @@ public class Subject implements Serializable {
         String query = request.getQueryString();
         query = StringUtils.isBlank(query) ? "" : query;
 
-        String body = new OauthRequestWrapper(request).getBody();
+        String body = "";
+        String contentType = request.getHeader("Content-type");
+        if (contentType != null && !contentType.startsWith("multipart/form-data")) {
+            body = new OauthRequestWrapper(request).getBody();
+        }
         return query + body;
     }
 
