@@ -8,6 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
+ * 加密解密工具类
+ *
  * @author tunkko
  * @version 1.0
  * @date 2020/7/15
