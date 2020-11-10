@@ -1,7 +1,7 @@
 package org.tunkko.oauth.exception;
 
 /**
- * 账号锁定异常
+ * 账号锁定
  *
  * @author tunkko
  * @version 1.0

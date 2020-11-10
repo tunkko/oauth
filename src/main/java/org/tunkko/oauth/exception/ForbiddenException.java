@@ -1,7 +1,7 @@
 package org.tunkko.oauth.exception;
 
 /**
- * 拒绝访问异常
+ * 拒绝访问
  *
  * @author tunkko
  * @version 1.0
