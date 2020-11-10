@@ -7,7 +7,7 @@ package org.tunkko.oauth.exception;
  * @version 1.0
  * @since 2020/7/15
  */
-public class OauthException extends Exception {
+public class OauthException extends RuntimeException {
 
     public OauthException(String msg) {
         super(msg);

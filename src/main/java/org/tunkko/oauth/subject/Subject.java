@@ -5,9 +5,10 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.tunkko.oauth.filter.OauthRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -148,9 +149,11 @@ public class Subject implements Serializable {
     }
 
     private String getParams(HttpServletRequest request) {
-        Map<String, String[]> params = new HashMap<>(request.getParameterMap());
-        params.remove("token");
-        return JSON.toJSONString(params);
+        String query = request.getQueryString();
+        query = StringUtils.isBlank(query) ? "" : query;
+
+        String body = new OauthRequestWrapper(request).getBody();
+        return query + body;
     }
 
     private String getIp(HttpServletRequest request) {

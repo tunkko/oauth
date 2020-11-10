@@ -3,7 +3,7 @@ package org.tunkko.oauth.configuration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 安全配置参数
+ * 配置参数
  *
  * @author tunkko
  * @version 1.0

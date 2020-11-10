@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * 认证拦截器
+ * 拦截器
  *
  * @author tunkko
  * @version 1.0
@@ -41,7 +41,7 @@ public class OauthInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         Logger.info("------------------------------------------------------------------------");
         checkPath(request.getRequestURI());
         checkTokenAndPermit(request, handler);
@@ -54,7 +54,7 @@ public class OauthInterceptor implements HandlerInterceptor {
         SubjectUtils.remove();
     }
 
-    private void checkPath(String uri) throws ForbiddenException {
+    private void checkPath(String uri) {
         Logger.info("检查访问路径: %s - %s", Arrays.toString(includePaths), uri);
         if (ArrayUtils.isNotEmpty(includePaths)) {
             for (String path : includePaths) {
@@ -67,7 +67,7 @@ public class OauthInterceptor implements HandlerInterceptor {
         throw new ForbiddenException("请求路径无效");
     }
 
-    private void checkTokenAndPermit(HttpServletRequest request, Object handler) throws OauthException {
+    private void checkTokenAndPermit(HttpServletRequest request, Object handler) {
         String accessToken = request.getHeader("token");
         if (StringUtils.isBlank(accessToken)) {
             accessToken = request.getParameter("token");
@@ -91,7 +91,7 @@ public class OauthInterceptor implements HandlerInterceptor {
         Logger.info("主体Subject: %s", subject.toJson());
     }
 
-    private void checkPermit(Object handler, List<String> permits) throws ForbiddenException {
+    private void checkPermit(Object handler, List<String> permits) {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
             Permit permit = method.getAnnotation(Permit.class);

@@ -2,6 +2,7 @@ package org.tunkko.oauth.configuration;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +12,13 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.tunkko.oauth.OauthInterceptor;
+import org.tunkko.oauth.filter.OauthFilter;
 import org.tunkko.oauth.token.store.JdbcTokenStore;
 import org.tunkko.oauth.token.store.RedisTokenStore;
 import org.tunkko.oauth.token.store.TokenStore;
 
 /**
- * 安全配置
+ * 配置
  *
  * @author tunkko
  * @version 1.0
@@ -58,6 +60,14 @@ public class OauthConfiguration implements WebMvcConfigurer {
             }
         }
         return null;
+    }
+
+    @Bean
+    @SuppressWarnings("unchecked")
+    public FilterRegistrationBean filter() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+        registrationBean.setFilter(new OauthFilter());
+        return registrationBean;
     }
 
     @Override
