@@ -1,6 +1,7 @@
 package org.tunkko.oauth.subject;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -8,7 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.tunkko.oauth.filter.OauthRequestWrapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -150,18 +151,25 @@ public class Subject implements Serializable {
 
     private String getParams(HttpServletRequest request) {
         if (request.getRequestURI().contains("login")) {
-            return "";
+            return "{}";
         }
 
-        String query = request.getQueryString();
-        query = StringUtils.isBlank(query) ? "" : query;
+        JSONObject params = new JSONObject();
+        Map<String, String[]> parameters = new HashMap<>(request.getParameterMap());
+        parameters.remove("token");
+        for (String key : parameters.keySet()) {
+            params.put(key, StringUtils.join(parameters.get(key), ","));
+        }
 
-        String body = "";
         String contentType = request.getHeader("Content-type");
         if (contentType != null && !contentType.startsWith("multipart/form-data")) {
-            body = new OauthRequestWrapper(request).getBody();
+            String body = new OauthRequestWrapper(request).getBody();
+            if (StringUtils.isNotBlank(body)) {
+                params.putAll(JSON.parseObject(body));
+            }
         }
-        return query + body;
+
+        return params.toJSONString();
     }
 
     private String getIp(HttpServletRequest request) {
