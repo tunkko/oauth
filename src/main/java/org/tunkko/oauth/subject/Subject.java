@@ -149,6 +149,9 @@ public class Subject implements Serializable {
     }
 
     private String getParams(HttpServletRequest request) {
+        if (request.getRequestURI().contains("login")) {
+            return "";
+        }
         String query = request.getQueryString();
         query = StringUtils.isBlank(query) ? "" : query;
 
