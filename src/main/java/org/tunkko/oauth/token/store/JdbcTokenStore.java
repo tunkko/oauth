@@ -143,7 +143,7 @@ public class JdbcTokenStore implements TokenStore {
         jdbcTemplate.update(I_TOKEN, userId + ":" + token.getCreateTime().getTime(), accessToken);
 
         // 存储许可
-        storePermit(userId, token.getPermits());
+        storePermit(userId, token.getPermit());
         return accessToken;
     }
 
@@ -157,7 +157,7 @@ public class JdbcTokenStore implements TokenStore {
                     Object userId = token.getUserId();
                     String query = jdbcTemplate.queryForObject(Q_TOKEN, String.class, userId + ":" + token.getCreateTime().getTime());
                     if (StringUtils.equals(query, accessToken)) {
-                        token.setPermits(getPermits(userId));
+                        token.setPermit(getPermit(userId));
                         return token;
                     }
                 } catch (EmptyResultDataAccessException ignored) {
@@ -212,7 +212,7 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public List<String> getPermits(Object userId) {
+    public List<String> getPermit(Object userId) {
         try {
             return jdbcTemplate.queryForList(Q_PERMIT, String.class, userId);
         } catch (EmptyResultDataAccessException ignored) {

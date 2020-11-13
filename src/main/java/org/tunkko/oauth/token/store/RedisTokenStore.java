@@ -104,7 +104,7 @@ public class RedisTokenStore implements TokenStore {
         }
 
         // 存储许可
-        storePermit(userId, token.getPermits());
+        storePermit(userId, token.getPermit());
         return accessToken;
     }
 
@@ -116,7 +116,7 @@ public class RedisTokenStore implements TokenStore {
                 Object userId = token.getUserId();
                 String key = parse(OAUTH_TOKEN, userId, token.getCreateTime().getTime());
                 if (StringUtils.equals(redisTemplate.opsForValue().get(key), accessToken)) {
-                    token.setPermits(getPermits(userId));
+                    token.setPermit(getPermit(userId));
                     return token;
                 }
             }
@@ -168,7 +168,7 @@ public class RedisTokenStore implements TokenStore {
     }
 
     @Override
-    public List<String> getPermits(Object userId) {
+    public List<String> getPermit(Object userId) {
         String key = parse(OAUTH_PERMIT, userId);
         return redisTemplate.opsForList().range(key, 0, -1);
     }

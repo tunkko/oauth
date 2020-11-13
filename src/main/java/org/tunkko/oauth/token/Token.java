@@ -48,37 +48,37 @@ public class Token implements Serializable {
     private Date expireTime;
 
     /**
-     * 许可
+     * 许可证
      */
-    private List<String> permits;
+    private List<String> permit;
 
     public Token() {
     }
 
-    public Token(Object userId, List<String> permits) {
-        this(userId, 0L, permits);
+    public Token(Object userId, List<String> permit) {
+        this(userId, 0L, permit);
     }
 
-    public Token(Object userId, Long validDuration, List<String> permits) {
-        this(userId, null, 1, validDuration, permits);
+    public Token(Object userId, Long validDuration, List<String> permit) {
+        this(userId, null, 1, validDuration, permit);
     }
 
-    public Token(Object userId, Map<String, Object> claims, List<String> permits) {
-        this(userId, claims, 1, 0L, permits);
+    public Token(Object userId, Map<String, Object> claims, List<String> permit) {
+        this(userId, claims, 1, 0L, permit);
     }
 
-    public Token(Object userId, Map<String, Object> claims, Long validDuration, List<String> permits) {
-        this(userId, claims, 1, validDuration, permits);
+    public Token(Object userId, Map<String, Object> claims, Long validDuration, List<String> permit) {
+        this(userId, claims, 1, validDuration, permit);
     }
 
-    public Token(Object userId, Map<String, Object> claims, Integer maxToken, Long validDuration, List<String> permits) {
+    public Token(Object userId, Map<String, Object> claims, Integer maxToken, Long validDuration, List<String> permit) {
         this.userId = userId;
         this.claims = MapUtils.isEmpty(claims) ? new HashMap<String, Object>() : claims;
         this.maxToken = maxToken < 1 ? 1 : maxToken;
         this.createTime = new Date();
         this.validDuration = validDuration;
         this.expireTime = validDuration == 0 ? null : new Date(System.currentTimeMillis() + validDuration);
-        this.permits = CollectionUtils.isEmpty(permits) ? new ArrayList<String>() : permits;
+        this.permit = CollectionUtils.isEmpty(permit) ? new ArrayList<String>() : permit;
     }
 
     public Object getUserId() {
@@ -129,17 +129,17 @@ public class Token implements Serializable {
         this.expireTime = expireTime;
     }
 
-    public List<String> getPermits() {
-        return permits;
+    public List<String> getPermit() {
+        return permit;
     }
 
-    public void setPermits(List<String> permits) {
-        this.permits = permits;
+    public void setPermit(List<String> permit) {
+        this.permit = permit;
     }
 
     public String toJson() {
         JSONObject json = JSON.parseObject(JSON.toJSONString(this));
-        json.remove("permits");
+        json.remove("permit");
         return json.toJSONString();
     }
 }

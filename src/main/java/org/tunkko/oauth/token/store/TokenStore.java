@@ -89,5 +89,5 @@ public interface TokenStore {
      * @param userId 用户ID
      * @return List
      */
-    List<String> getPermits(Object userId);
+    List<String> getPermit(Object userId);
 }
