@@ -79,10 +79,10 @@ public class OauthInterceptor implements HandlerInterceptor {
         }
 
         Object userId = token.getUserId();
-        List<String> permits = tokenStore.getPermits(userId);
+        List<String> permit = tokenStore.getPermit(userId);
 
         // 检查许可
-        checkPermit(handler, permits);
+        checkPermit(handler, permit);
 
         // 主体
         Map<String, Object> claims = token.getClaims();
@@ -91,20 +91,19 @@ public class OauthInterceptor implements HandlerInterceptor {
         Logger.info("主体Subject: %s", subject.toJson());
     }
 
-    private void checkPermit(Object handler, List<String> permits) {
+    private void checkPermit(Object handler, List<String> permit) {
         if (handler instanceof HandlerMethod) {
             Method method = ((HandlerMethod) handler).getMethod();
-            Permit permit = method.getAnnotation(Permit.class);
-            if (permit == null) {
+            Permit annotation = method.getAnnotation(Permit.class);
+            if (annotation == null) {
                 Class<?> clazz = method.getDeclaringClass();
-                permit = clazz.getAnnotation(Permit.class);
-                if (permit == null) {
+                annotation = clazz.getAnnotation(Permit.class);
+                if (annotation == null) {
                     return;
                 }
             }
-
-            String[] values = permit.value();
-            if (CollectionUtils.containsAny(Arrays.asList(values), permits)) {
+            String[] values = annotation.value();
+            if (ArrayUtils.isEmpty(values) || CollectionUtils.containsAny(permit, values)) {
                 return;
             }
         }
