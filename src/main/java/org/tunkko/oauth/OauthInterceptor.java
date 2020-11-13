@@ -102,6 +102,7 @@ public class OauthInterceptor implements HandlerInterceptor {
                     return;
                 }
             }
+
             String[] values = annotation.value();
             if (ArrayUtils.isEmpty(values) || CollectionUtils.containsAny(permit, values)) {
                 return;
