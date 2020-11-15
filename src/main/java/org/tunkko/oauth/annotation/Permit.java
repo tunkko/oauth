@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
  * 许可
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -5,7 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.tunkko.Logger;
+import org.tunkko.log.Logger;
 import org.tunkko.oauth.annotation.Permit;
 import org.tunkko.oauth.exception.ForbiddenException;
 import org.tunkko.oauth.exception.OauthException;
@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
  * 拦截器
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public class OauthInterceptor implements HandlerInterceptor {
 

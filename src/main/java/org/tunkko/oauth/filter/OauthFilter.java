@@ -8,8 +8,6 @@ import java.io.IOException;
  * 过滤器
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public class OauthFilter implements Filter {
 

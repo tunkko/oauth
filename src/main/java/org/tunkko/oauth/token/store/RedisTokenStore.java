@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.tunkko.Logger;
+import org.tunkko.log.Logger;
 import org.tunkko.oauth.exception.AccountLockedException;
 import org.tunkko.oauth.exception.OauthException;
 import org.tunkko.oauth.token.Token;
@@ -17,8 +17,6 @@ import java.util.concurrent.TimeUnit;
  * redis令牌存储
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public class RedisTokenStore implements TokenStore {
 

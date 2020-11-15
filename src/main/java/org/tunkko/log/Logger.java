@@ -1,4 +1,4 @@
-package org.tunkko;
+package org.tunkko.log;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -7,8 +7,6 @@ import org.apache.commons.logging.LogFactory;
  * 日志工具类
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public class Logger {
 

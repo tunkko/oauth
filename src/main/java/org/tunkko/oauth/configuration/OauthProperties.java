@@ -6,8 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * 配置参数
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 @ConfigurationProperties(prefix = "oauth")
 public class OauthProperties {

@@ -4,8 +4,6 @@ package org.tunkko.oauth.exception;
  * 账号锁定
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public class AccountLockedException extends OauthException {
 

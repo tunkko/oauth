@@ -4,8 +4,6 @@ package org.tunkko.tools.codec;
  * base64工具类
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public class Base64Utils {
 

@@ -10,8 +10,6 @@ import java.util.List;
  * 令牌存储
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public interface TokenStore {
 

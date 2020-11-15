@@ -21,8 +21,6 @@ import org.tunkko.oauth.token.store.TokenStore;
  * 配置
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 @Configuration
 @ConditionalOnProperty(prefix = "oauth", name = "include-paths")

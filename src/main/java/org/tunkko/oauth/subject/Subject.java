@@ -20,8 +20,6 @@ import java.util.Map;
  * 主体
  *
  * @author tunkko
- * @version 1.0
- * @date 2020/7/15
  */
 public class Subject implements Serializable {
 
