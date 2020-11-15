@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * 加密解密工具类
+ * 对称算法加解密类
  *
  * @author tunkko
  */
@@ -24,7 +24,7 @@ public class Crypto {
             byte[] bytes = string.getBytes();
             cipher.init(Cipher.ENCRYPT_MODE, getKey(algorithm.name, salt));
             byte[] result = cipher.doFinal(bytes);
-            return Base64Utils.encode(result);
+            return Base64.encode(result);
         } catch (Exception e) {
             return null;
         }
@@ -38,7 +38,7 @@ public class Crypto {
         try {
             Cipher cipher = Cipher.getInstance(algorithm.cipher);
             cipher.init(Cipher.DECRYPT_MODE, getKey(algorithm.name, salt));
-            byte[] bytes = cipher.doFinal(Base64Utils.decode0(string));
+            byte[] bytes = cipher.doFinal(Base64.decode0(string));
             return new String(bytes);
         } catch (Exception e) {
             return null;

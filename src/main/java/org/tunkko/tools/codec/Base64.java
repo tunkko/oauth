@@ -1,11 +1,11 @@
 package org.tunkko.tools.codec;
 
 /**
- * base64工具类
+ * Base64加解密类
  *
  * @author tunkko
  */
-public class Base64Utils {
+public class Base64 {
 
     private static final char[] ASCII = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".toCharArray();
 

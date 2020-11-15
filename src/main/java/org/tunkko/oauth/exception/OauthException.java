@@ -1,7 +1,7 @@
 package org.tunkko.oauth.exception;
 
 /**
- * 安全异常
+ * 认证异常
  *
  * @author tunkko
  */
