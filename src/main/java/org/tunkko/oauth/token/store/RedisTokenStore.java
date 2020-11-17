@@ -155,13 +155,13 @@ public class RedisTokenStore implements TokenStore {
     }
 
     @Override
-    public void storePermit(Object userId, List<String> permits) {
+    public void storePermit(Object userId, List<String> permit) {
         String key = parse(OAUTH_PERMIT, userId);
         // 删除原数据
         redisTemplate.delete(key);
-        if (CollectionUtils.isNotEmpty(permits)) {
+        if (CollectionUtils.isNotEmpty(permit)) {
             // 存储新数据
-            redisTemplate.opsForList().rightPushAll(key, permits);
+            redisTemplate.opsForList().rightPushAll(key, permit);
         }
     }
 

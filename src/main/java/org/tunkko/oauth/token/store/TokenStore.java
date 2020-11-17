@@ -77,9 +77,9 @@ public interface TokenStore {
      * 存储许可
      *
      * @param userId  用户ID
-     * @param permits 许可
+     * @param permit 许可
      */
-    void storePermit(Object userId, List<String> permits);
+    void storePermit(Object userId, List<String> permit);
 
     /**
      * 获取许可

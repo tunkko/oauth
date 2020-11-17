@@ -198,13 +198,13 @@ public class JdbcTokenStore implements TokenStore {
     }
 
     @Override
-    public void storePermit(Object userId, List<String> permits) {
+    public void storePermit(Object userId, List<String> permit) {
         // 删除原数据
         jdbcTemplate.update(D_PERMIT, userId);
-        if (CollectionUtils.isNotEmpty(permits)) {
+        if (CollectionUtils.isNotEmpty(permit)) {
             // 存储新数据
-            for (String permit : permits) {
-                jdbcTemplate.update(I_PERMIT, userId, permit);
+            for (String perm : permit) {
+                jdbcTemplate.update(I_PERMIT, userId, perm);
             }
         }
     }
