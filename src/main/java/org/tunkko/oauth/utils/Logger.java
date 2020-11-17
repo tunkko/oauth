@@ -1,4 +1,4 @@
-package org.tunkko.log;
+package org.tunkko.oauth.utils;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

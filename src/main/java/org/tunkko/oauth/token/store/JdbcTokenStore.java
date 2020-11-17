@@ -5,11 +5,11 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.tunkko.log.Logger;
+import org.tunkko.oauth.utils.Logger;
 import org.tunkko.oauth.exception.AccountLockedException;
 import org.tunkko.oauth.exception.OauthException;
 import org.tunkko.oauth.token.Token;
-import org.tunkko.tools.codec.Crypto;
+import org.tunkko.oauth.utils.Crypto;
 
 import java.util.*;
 

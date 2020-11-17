@@ -5,7 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.tunkko.log.Logger;
+import org.tunkko.oauth.utils.Logger;
 import org.tunkko.oauth.annotation.Permit;
 import org.tunkko.oauth.exception.ForbiddenException;
 import org.tunkko.oauth.exception.OauthException;

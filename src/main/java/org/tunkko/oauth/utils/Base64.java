@@ -1,4 +1,4 @@
-package org.tunkko.tools.codec;
+package org.tunkko.oauth.utils;
 
 /**
  * Base64加解密类
