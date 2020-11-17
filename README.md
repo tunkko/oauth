@@ -1,6 +1,6 @@
 # Oauth
 
-![Maven](https://img.shields.io/badge/maven-v3.3.9-blue)
+![Maven](https://img.shields.io/badge/maven-v4.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## 1 简介
