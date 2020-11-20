@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class SubjectUtils {
 
-    private static final ThreadLocal<Subject> LOCAL = new ThreadLocal<>();
+    private static final InheritableThreadLocal<Subject> LOCAL = new InheritableThreadLocal<>();
 
     public static void set(Subject subject) {
         LOCAL.set(subject);
