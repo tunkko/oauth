@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.tunkko.oauth.OauthInterceptor;
+import org.tunkko.oauth.enums.StoreType;
 import org.tunkko.oauth.filter.OauthFilter;
 import org.tunkko.oauth.token.store.JdbcTokenStore;
 import org.tunkko.oauth.token.store.RedisTokenStore;
@@ -42,16 +43,14 @@ public class OauthConfiguration implements WebMvcConfigurer {
 
     @Bean
     public TokenStore tokenStore() {
-        String storeType = properties.getStoreType();
-        boolean redis = "redis".equalsIgnoreCase(storeType);
-        boolean jdbc = "jdbc".equalsIgnoreCase(storeType);
-
-        if (redis) {
+        StoreType storeType = properties.getStoreType();
+        if (storeType == StoreType.redis) {
             StringRedisTemplate redisTemplate = context.getBean(StringRedisTemplate.class);
             if (redisTemplate != null) {
                 return new RedisTokenStore(redisTemplate);
             }
-        } else if (jdbc) {
+        }
+        if (storeType == StoreType.jdbc) {
             JdbcTemplate jdbcTemplate = context.getBean(JdbcTemplate.class);
             if (jdbcTemplate != null) {
                 return new JdbcTokenStore(jdbcTemplate);
@@ -73,7 +72,7 @@ public class OauthConfiguration implements WebMvcConfigurer {
         String[] paths = properties.getPaths();
         String[] includePaths = properties.getIncludePaths();
         String[] excludePaths = properties.getExcludePaths();
-        registry.addInterceptor(new OauthInterceptor(tokenStore(), includePaths))
+        registry.addInterceptor(new OauthInterceptor(tokenStore(), includePaths, properties.getEnv()))
                 .addPathPatterns(paths)
                 .excludePathPatterns(excludePaths);
     }

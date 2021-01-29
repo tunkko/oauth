@@ -1,6 +1,8 @@
 package org.tunkko.oauth.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.tunkko.oauth.enums.Env;
+import org.tunkko.oauth.enums.StoreType;
 
 /**
  * 配置参数
@@ -11,9 +13,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class OauthProperties {
 
     /**
-     * 令牌存储方式(redis|jdbc)
+     * 令牌存储方式
      */
-    private String storeType = "redis";
+    private StoreType storeType = StoreType.redis;
 
     /**
      * 拦截路径
@@ -30,11 +32,16 @@ public class OauthProperties {
      */
     private String[] excludePaths = {};
 
-    public String getStoreType() {
+    /**
+     * 应对环境
+     */
+    private Env env = Env.PRO;
+
+    public StoreType getStoreType() {
         return storeType;
     }
 
-    public void setStoreType(String storeType) {
+    public void setStoreType(StoreType storeType) {
         this.storeType = storeType;
     }
 
@@ -60,5 +67,13 @@ public class OauthProperties {
 
     public void setExcludePaths(String[] excludePaths) {
         this.excludePaths = excludePaths;
+    }
+
+    public Env getEnv() {
+        return env;
+    }
+
+    public void setEnv(Env env) {
+        this.env = env;
     }
 }

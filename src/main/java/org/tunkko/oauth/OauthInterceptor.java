@@ -5,6 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.tunkko.oauth.enums.Env;
 import org.tunkko.oauth.utils.Logger;
 import org.tunkko.oauth.annotation.Permit;
 import org.tunkko.oauth.exception.ForbiddenException;
@@ -33,9 +34,12 @@ public class OauthInterceptor implements HandlerInterceptor {
 
     private String[] includePaths;
 
-    public OauthInterceptor(TokenStore tokenStore, String[] includePaths) {
+    private Env env;
+
+    public OauthInterceptor(TokenStore tokenStore, String[] includePaths, Env env) {
         this.tokenStore = tokenStore;
         this.includePaths = includePaths;
+        this.env = env;
     }
 
     @Override
@@ -80,7 +84,9 @@ public class OauthInterceptor implements HandlerInterceptor {
         List<String> permit = tokenStore.getPermit(userId);
 
         // 检查许可
-        checkPermit(handler, permit);
+        if (env == Env.PRO) {
+            checkPermit(handler, permit);
+        }
 
         // 主体
         Map<String, Object> claims = token.getClaims();
