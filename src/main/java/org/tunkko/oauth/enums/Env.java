@@ -17,5 +17,5 @@ public enum Env implements Serializable {
     /**
      * 生产环境
      */
-    PRO;
+    PRO
 }

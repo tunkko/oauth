@@ -15,5 +15,5 @@ public enum StoreType {
     /**
      * jdbc
      */
-    jdbc;
+    jdbc
 }
